@@ -38,3 +38,17 @@
    Returns new map in sorted order."
   [record-map]
   )
+
+(defn sort-by-birthdate-asc
+  "Sorts a record map by email order descending (then by last name ascending).
+   Returns new map in sorted order."
+  [record-map]
+  )
+
+
+(defn sort-by-last-name-asc
+  "Sorts a record map by email order descending (then by last name ascending).
+   Returns new map in sorted order."
+  [record-map]
+  (sort-by :last-name record-map)
+  )
