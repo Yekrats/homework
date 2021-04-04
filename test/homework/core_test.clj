@@ -4,13 +4,13 @@
 
 (deftest basic-parse
   (testing
-    (is (= (parse-line "Starkey | Scott | name@gmail.com | green | 01/01/2000") ; pipe-delimited data
+    (is (= (select-keys (parse-line "Starkey | Scott | name@gmail.com | green | 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; pipe-delimited data
            {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
 
-    (is (= (parse-line "Starkey, Scott, name@gmail.com, green, 01/01/2000") ; comma-delimited data
+    (is (= (select-keys (parse-line "Starkey, Scott, name@gmail.com, green, 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; comma-delimited data
            {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
 
-    (is (= (parse-line "Starkey Scott name@gmail.com green 01/01/2000") ; space-delimited data
+    (is (= (select-keys  (parse-line "Starkey Scott name@gmail.com green 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; space-delimited data
            {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
     ))
 
@@ -36,101 +36,38 @@
                   :email "hans@volksfrei.de",
                   :favorite-color "blue",
                   :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"})
-              (parse-files "./resources/comma-data.csv")])))
+            (map #(select-keys % [:last-name :first-name :email :favorite-color :date-of-birth])
+                 (parse-files "./resources/comma-data.csv"))])))
 
 (deftest date-asc
   (testing
-      (is [= '({:last-name "Gruber",
-                :first-name "Hans",
-                :email "hans@volksfrei.de",
-                :favorite-color "blue",
-                :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"}
-              {:last-name "Gennero",
-                :first-name "Holly",
-                :email "gennero@nakatomi.com",
-                :favorite-color "yellow",
-                :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
-              {:last-name "McClane",
-                :first-name "John",
-                :email "jmcclane@nypd.com",
-                :favorite-color "brown",
-                :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
-              {:last-name "Starkey",
-                :first-name "Scotticus",
-                :email "yekrats@gmail.com",
-                :favorite-color "green",
-                :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"})
-           (sort-by-birthdate-asc (parse-files "./resources/comma-data.csv"))])))
+      (is [= '({:first-name "Hans", :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"}
+               {:first-name "Holly", :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
+               {:first-name "John", :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
+               {:first-name "Scotticus", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"})
+           (map #(select-keys % [:first-name :date-of-birth])
+                (sort-by-birthdate-asc (parse-files "./resources/comma-data.csv")))])))
 
 (deftest email-desc
   (testing
-      (is [= '({:last-name "Stark",
-                :first-name "Tony",
-                :email "tony@stark.com",
-                :favorite-color "red",
-                :date-of-birth #inst "1988-02-29T05:00:00.000-00:00"}
-              {:last-name "AStarkey",
-                :first-name "Scotto",
-                :email "scotto@yekrats.com",
-                :favorite-color "turquoise",
-                :date-of-birth #inst "1999-01-01T05:00:00.000-00:00"}
-              {:last-name "BStarkey",
-                :first-name "Scotto",
-                :email "scotto@yekrats.com",
-                :favorite-color "blue",
-                :date-of-birth #inst "1998-01-01T05:00:00.000-00:00"}
-              {:last-name "CStarkey",
-                :first-name "Scotto",
-                :email "scotto@yekrats.com",
-                :favorite-color "chartreuse",
-                :date-of-birth #inst "1997-01-01T05:00:00.000-00:00"}
-              {:last-name "Banner",
-                :first-name "Bruce",
-                :email "bruce_b@avengers.org",
-                :favorite-color "green",
-                :date-of-birth #inst "1996-04-10T05:00:00.000-00:00"})
-            (sort-by-email-desc (parse-files "./resources/weird-space-same-email-case.txt"))])))
+      (is [= '({:last-name "Stark", :email "tony@stark.com"}
+               {:last-name "AStarkey", :email "scotto@yekrats.com"}
+               {:last-name "BStarkey", :email "scotto@yekrats.com"}
+               {:last-name "CStarkey", :email "scotto@yekrats.com"}
+               {:last-name "Banner", :email "bruce_b@avengers.org"})
+           (map #(select-keys % [:last-name :email])
+                (sort-by-email-desc (parse-files "./resources/weird-space-same-email-case.txt")))
+           ])))
 
 (deftest parse-multiple-files
   (testing
-      (is [= '({:last-name "Starkey",
-                :first-name "Scotticus",
-                :email "yekrats@gmail.com",
-                :favorite-color "green",
-                :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}
-              {:last-name "McClane",
-                :first-name "John",
-                :email "jmcclane@nypd.com",
-                :favorite-color "brown",
-                :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
-              {:last-name "Gennero",
-                :first-name "Holly",
-                :email "gennero@nakatomi.com",
-                :favorite-color "yellow",
-                :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
-              {:last-name "Gruber",
-                :first-name "Hans",
-                :email "hans@volksfrei.de",
-                :favorite-color "blue",
-                :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"}
-              {:last-name "Starkey",
-                :first-name "Scotto",
-                :email "scotto@yekrats.com",
-                :favorite-color "turquoise",
-                :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}
-              {:last-name "Jordan",
-                :first-name "Michael",
-                :email "michaelj@nba.com",
-                :favorite-color "red",
-                :date-of-birth #inst "1963-02-07T05:00:00.000-00:00"}
-              {:last-name "Bunny",
-                :first-name "Bugs",
-                :email "bugs@wb.com",
-                :favorite-color "orange",
-                :date-of-birth #inst "1999-12-14T05:00:00.000-00:00"}
-              {:last-name "Swackhammer",
-                :first-name "Mr.",
-                :email "swackhammer@moronmountain.com",
-                :favorite-color "black",
-                :date-of-birth #inst "1968-07-09T05:00:00.000-00:00"})
-           (parse-files "./resources/comma-data.csv" "./resources/space-data.txt")])))
+      (is [= '({:last-name "Starkey"}
+               {:last-name "McClane"}
+               {:last-name "Gennero"}
+               {:last-name "Gruber"}
+               {:last-name "Starkey"}
+               {:last-name "Jordan"}
+               {:last-name "Bunny"}
+               {:last-name "Swackhammer"})
+           (map #(select-keys % [:last-name])
+                (parse-files "./resources/comma-data.csv" "./resources/space-data.txt"))])))

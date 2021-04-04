@@ -1,12 +1,15 @@
 (ns homework.core
   (:gen-class)
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.pprint :refer [pprint]])
   (:import [java.text SimpleDateFormat]))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
+
+(defn uuid [& _] (.toString (java.util.UUID/randomUUID)))
 
 (defn parse-date
   "Formats date to Java date object"
@@ -20,7 +23,8 @@
   [string]
   (as-> (str/split string #"[\|\s\,]+") $ ;; parse basic string splitting by the pipe, space, or comma characters
       (zipmap [:last-name :first-name :email :favorite-color :date-of-birth] $) ; combine fields with data
-      (update-in $ [:date-of-birth] parse-date)))
+      (update-in $ [:date-of-birth] parse-date)
+      (update-in $ [:id] uuid)))
 
 (defn parse-files
   "Parsing each of the lines of multiple files. Each 'file-name' is considered
