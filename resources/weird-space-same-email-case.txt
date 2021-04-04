@@ -1,0 +1,5 @@
+CStarkey Scotto scotto@yekrats.com chartreuse 01/01/1997
+AStarkey Scotto scotto@yekrats.com turquoise 01/01/1999
+Stark Tony tony@stark.com red 02/29/1988
+BStarkey Scotto scotto@yekrats.com blue 01/01/1998
+Banner Bruce bruce_b@avengers.org green 04/10/1996

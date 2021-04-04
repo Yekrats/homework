@@ -37,12 +37,19 @@
   "Sorts a record map by email order descending (then by last name ascending).
    Returns new map in sorted order."
   [record-map]
-  )
+  (sort-by (juxt :email :last-name)
+     (fn [[x0 x1] [y0 y1]]
+       (let [c (- (compare x0 y0))]
+         (if-not (zero? c)
+           c
+           (compare x1 y1))))
+      record-map))
 
 (defn sort-by-birthdate-asc
   "Sorts a record map by email order descending (then by last name ascending).
    Returns new map in sorted order."
   [record-map]
+  (sort-by :date-of-birth record-map)
   )
 
 
