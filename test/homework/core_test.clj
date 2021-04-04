@@ -5,13 +5,13 @@
 (deftest basic-parse
   (testing
     (is (= (select-keys (parse-line "Starkey | Scott | name@gmail.com | green | 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; pipe-delimited data
-           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
+           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth "2000/01/01"}))
 
     (is (= (select-keys (parse-line "Starkey, Scott, name@gmail.com, green, 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; comma-delimited data
-           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
+           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth "2000/01/01"}))
 
     (is (= (select-keys  (parse-line "Starkey Scott name@gmail.com green 01/01/2000") [:last-name :first-name :email :favorite-color :date-of-birth]) ; space-delimited data
-           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}))
+           {:last-name "Starkey", :first-name "Scott", :email "name@gmail.com", :favorite-color "green", :date-of-birth "2000/01/01"}))
     ))
 
  (deftest file-parse
@@ -20,31 +20,31 @@
                   :first-name "Scotticus",
                   :email "yekrats@gmail.com",
                   :favorite-color "green",
-                  :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}
+                  :date-of-birth "2000/01/01"}
                 {:last-name "McClane",
                   :first-name "John",
                   :email "jmcclane@nypd.com",
                   :favorite-color "brown",
-                  :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
+                  :date-of-birth "1960/12/24"}
                 {:last-name "Gennero",
                   :first-name "Holly",
                   :email "gennero@nakatomi.com",
                   :favorite-color "yellow",
-                  :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
+                  :date-of-birth "1960/06/20"}
                 {:last-name "Gruber",
                   :first-name "Hans",
                   :email "hans@volksfrei.de",
                   :favorite-color "blue",
-                  :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"})
+                  :date-of-birth "1958/02/14"})
             (map #(select-keys % [:last-name :first-name :email :favorite-color :date-of-birth])
                  (parse-files "./resources/comma-data.csv"))])))
 
 (deftest date-asc
   (testing
-      (is [= '({:first-name "Hans", :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"}
-               {:first-name "Holly", :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
-               {:first-name "John", :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
-               {:first-name "Scotticus", :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"})
+      (is [= '({:first-name "Hans", :date-of-birth "1958/02/14"}
+               {:first-name "Holly", :date-of-birth "1960/06/20"}
+               {:first-name "John", :date-of-birth "1960/12/24"}
+               {:first-name "Scotticus", :date-of-birth "2000/01/01"})
            (map #(select-keys % [:first-name :date-of-birth])
                 (sort-by-birthdate-asc (parse-files "./resources/comma-data.csv")))])))
 
