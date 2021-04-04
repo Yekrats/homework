@@ -36,7 +36,7 @@
                   :email "hans@volksfrei.de",
                   :favorite-color "blue",
                   :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"})
-              (parse-file "./resources/comma-data.csv")])))
+              (parse-files "./resources/comma-data.csv")])))
 
 (deftest date-asc
   (testing
@@ -60,7 +60,7 @@
                 :email "yekrats@gmail.com",
                 :favorite-color "green",
                 :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"})
-           (sort-by-birthdate-asc (parse-file "./resources/comma-data.csv"))])))
+           (sort-by-birthdate-asc (parse-files "./resources/comma-data.csv"))])))
 
 (deftest email-desc
   (testing
@@ -89,4 +89,48 @@
                 :email "bruce_b@avengers.org",
                 :favorite-color "green",
                 :date-of-birth #inst "1996-04-10T05:00:00.000-00:00"})
-            (sort-by-email-desc (parse-file "./resources/weird-space-same-email-case.txt"))])))
+            (sort-by-email-desc (parse-files "./resources/weird-space-same-email-case.txt"))])))
+
+(deftest parse-multiple-files
+  (testing
+      (is [= '({:last-name "Starkey",
+                :first-name "Scotticus",
+                :email "yekrats@gmail.com",
+                :favorite-color "green",
+                :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}
+              {:last-name "McClane",
+                :first-name "John",
+                :email "jmcclane@nypd.com",
+                :favorite-color "brown",
+                :date-of-birth #inst "1960-12-24T05:00:00.000-00:00"}
+              {:last-name "Gennero",
+                :first-name "Holly",
+                :email "gennero@nakatomi.com",
+                :favorite-color "yellow",
+                :date-of-birth #inst "1960-06-20T05:00:00.000-00:00"}
+              {:last-name "Gruber",
+                :first-name "Hans",
+                :email "hans@volksfrei.de",
+                :favorite-color "blue",
+                :date-of-birth #inst "1958-02-14T06:00:00.000-00:00"}
+              {:last-name "Starkey",
+                :first-name "Scotto",
+                :email "scotto@yekrats.com",
+                :favorite-color "turquoise",
+                :date-of-birth #inst "2000-01-01T05:00:00.000-00:00"}
+              {:last-name "Jordan",
+                :first-name "Michael",
+                :email "michaelj@nba.com",
+                :favorite-color "red",
+                :date-of-birth #inst "1963-02-07T05:00:00.000-00:00"}
+              {:last-name "Bunny",
+                :first-name "Bugs",
+                :email "bugs@wb.com",
+                :favorite-color "orange",
+                :date-of-birth #inst "1999-12-14T05:00:00.000-00:00"}
+              {:last-name "Swackhammer",
+                :first-name "Mr.",
+                :email "swackhammer@moronmountain.com",
+                :favorite-color "black",
+                :date-of-birth #inst "1968-07-09T05:00:00.000-00:00"})
+           (parse-files "./resources/comma-data.csv" "./resources/space-data.txt")])))

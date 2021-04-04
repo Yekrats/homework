@@ -20,18 +20,21 @@
   [string]
   (as-> (str/split string #"[\|\s\,]+") $ ;; parse basic string splitting by the pipe, space, or comma characters
       (zipmap [:last-name :first-name :email :favorite-color :date-of-birth] $) ; combine fields with data
-      (update-in $ [:date-of-birth] parse-date))
-       )
+      (update-in $ [:date-of-birth] parse-date)))
 
-(defn parse-file
-  "Parsing each of the lines of a file. 'file-name' is considered a string.
-  Returns a map of each line processed through parse-line."
-  ; Example:  (parse-file "./resources/comma-data.csv")
-  [file-name]
-  {:pre [(= true (string? file-name))]}
-  (->> (slurp file-name)
-       (str/split-lines)
-       (map parse-line)))
+(defn parse-files
+  "Parsing each of the lines of multiple files. Each 'file-name' is considered
+  a string. Returns a map of each line processed through parse-line."
+  ; Example:  (parse-files "./resources/comma-data.csv")
+  [file-name & more-files]
+  {:pre [(= true (or (nil? file-name) (string? file-name)))]}
+  (concat
+    (when file-name
+      (->> (slurp file-name)
+        (str/split-lines)
+        (map parse-line)))
+    (when more-files
+      (apply parse-files more-files))))
 
 (defn sort-by-email-desc
   "Sorts a record map by email order descending (then by last name ascending).
@@ -51,7 +54,6 @@
   [record-map]
   (sort-by :date-of-birth record-map)
   )
-
 
 (defn sort-by-last-name-asc
   "Sorts a record map by email order descending (then by last name ascending).
