@@ -28,19 +28,6 @@
       (s/join "/" $))
   )
 
-(def testdata '({:last-name "Gruber",
-  :first-name "Hans",
-  :email "hans@volksfrei.de",
-  :favorite-color "blue",
-  :date-of-birth "1958/02/14",
-  :id "05b6169f-a732-4ced-9e27-bf02a9ccc7f5"}
- {:last-name "Gennero",
-  :first-name "Holly",
-  :email "gennero@nakatomi.com",
-  :favorite-color "yellow",
-  :date-of-birth "1960/06/20",
-  :id "93ef22cf-8d62-4b6c-b446-fb9cdd507985"}))
-
 (defn parse-line
   "Basic parsing of a line (string) into initial map."
   [string]
@@ -75,15 +62,22 @@
            (compare x1 y1))))
       record-map))
 
-(defn view-by-email-desc
-  "Print (currently via pprint) "
+(defn generic-view
+  "Step through the records with the 5 points of vital information,
+  and print them out to the screen."
   [record-map]
-  (->> record-map
-    sort-by-email-desc
-    (map #(update-in % [:date-of-birth] parse-date-to-mdy))
-    (map #(select-keys % [:last-name :first-name :email :favorite-color :date-of-birth]))
-    (map #(pprint (str "Name: " %2 " " %1 ", Email: " %3 ", Favorite color: " %4
-                  ", Date of birth: " %5)))))
+  (as-> record-map $
+    (map #(update-in % [:date-of-birth] parse-date-to-mdy) $)
+    (map #(select-keys % [:last-name :first-name :email :favorite-color :date-of-birth]) $)
+    (doseq [rec $] (println (str "Name: " (:first-name rec) " " (:last-name rec)
+                                 ", Email: " (:email rec)
+                                 ", Favorite color: " (:favorite-color rec)
+                                 ", Date of birth: " (:date-of-birth rec))))))
+
+(defn view-by-email-desc
+  "Print record map in email-descending order of the 5 chief keys by means of the generic-view."
+  [record-map]
+  (-> record-map sort-by-email-desc generic-view))
 
 (defn sort-by-birthdate-asc
   "Sorts a record map by email order descending (then by last name ascending).
@@ -92,9 +86,18 @@
   (sort-by :date-of-birth record-map)
   )
 
+(defn view-by-birthdate-asc
+  "Print record map of birthdate order of the 5 chief keys through the generic view."
+  [record-map]
+  (-> record-map sort-by-birthdate-asc generic-view))
+
 (defn sort-by-last-name-asc
   "Sorts a record map by email order descending (then by last name ascending).
    Returns new map in sorted order."
   [record-map]
-  (sort-by :last-name record-map)
-  )
+  (sort-by :last-name record-map))
+
+(defn view-by-last-name-asc
+  "Print record map of last-name order of the 5 chief keys through the generic view."
+  [record-map]
+  (-> record-map sort-by-last-name-asc generic-view))

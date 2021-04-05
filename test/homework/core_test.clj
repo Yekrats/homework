@@ -71,3 +71,21 @@
                {:last-name "Swackhammer"})
            (map #(select-keys % [:last-name])
                 (parse-files "./resources/comma-data.csv" "./resources/space-data.txt"))])))
+
+(def testdata '({:last-name "Gruber",
+  :first-name "Hans",
+  :email "hans@volksfrei.de",
+  :favorite-color "blue",
+  :date-of-birth "1958/02/14",
+  :id "05b6169f-a732-4ced-9e27-bf02a9ccc7f5"}
+ {:last-name "Gennero",
+  :first-name "Holly",
+  :email "gennero@nakatomi.com",
+  :favorite-color "yellow",
+  :date-of-birth "1960/06/20",
+  :id "93ef22cf-8d62-4b6c-b446-fb9cdd507985"}))
+
+(deftest basic-views
+  (testing (is (nil? (view-by-last-name-asc testdata)) "View-by-last-name-asc should return nil and show a list of entries."))
+  (testing (is (nil? (view-by-email-desc testdata)) "View-by-email-desc should return nil and show a list of entries."))
+    (testing (is (nil? (view-by-birthdate-asc testdata)) "View-by-last-name-asc should return nil and show a list of entries.")))
