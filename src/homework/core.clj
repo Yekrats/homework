@@ -1,7 +1,9 @@
 (ns homework.core
   (:gen-class)
   (:require [clojure.string :as s]
-            [clojure.pprint :refer [pprint]]))
+            [ring.middleware.json :refer [wrap-json-response]]
+            [ring.util.response :refer [response]]
+            [compojure.core :refer [defroutes GET POST]]))
 
 (defn -main
   "I don't do a whole lot ... yet."
@@ -101,3 +103,34 @@
   "Print record map of last-name order of the 5 chief keys through the generic view."
   [record-map]
   (-> record-map sort-by-last-name-asc generic-view))
+
+(defn handler [request]
+  (response request))
+
+(def json-wrapper
+  (wrap-json-response handler))
+
+(def testdata2 '({:last-name "Gruber",
+  :first-name "Hans",
+  :email "hans@volksfrei.de",
+  :favorite-color "blue",
+  :date-of-birth "1958/02/14",
+  :id "05b6169f-a732-4ced-9e27-bf02a9ccc7f5"}
+ {:last-name "Gennero",
+  :first-name "Holly",
+  :email "gennero@nakatomi.com",
+  :favorite-color "yellow",
+  :date-of-birth "1960/06/20",
+  :id "93ef22cf-8d62-4b6c-b446-fb9cdd507985"}))
+
+(defn email-view-handler [request]
+  (response (sort-by-email-desc testdata2)))
+
+(defn birthdate-view-handler [request]
+  (response  (sort-by-birthdate-asc testdata2)))
+
+(defn lastname-view-handler [request]
+   (response  (sort-by-last-name-asc testdata2)))
+
+(defn post-records-handler [request id]
+  (response (filter #(= id (:id %)) testdata2)))
