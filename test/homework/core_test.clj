@@ -88,4 +88,6 @@
 (deftest basic-views
   (testing (is (nil? (view-by-last-name-asc testdata)) "View-by-last-name-asc should return nil and show a list of entries."))
   (testing (is (nil? (view-by-email-desc testdata)) "View-by-email-desc should return nil and show a list of entries."))
-    (testing (is (nil? (view-by-birthdate-asc testdata)) "View-by-last-name-asc should return nil and show a list of entries.")))
+  (testing (is (nil? (view-by-birthdate-asc testdata)) "View-by-last-name-asc should return nil and show a list of entries.")
+    (testing (is (nil? (view-by-email-desc (parse-files "./resources/comma-data.csv" "./resources/pipe-data.txt")))) "Should show multiple files parsed in reverse email order.")
+    (testing (is (nil? (view-by-email-desc (parse-files "./resources/weird-space-same-email-case.txt")))) "Should show collision of email addresses sorted by last name.")))
