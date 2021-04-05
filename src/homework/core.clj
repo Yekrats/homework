@@ -5,11 +5,6 @@
             [ring.util.response :refer [response]]
             [compojure.core :refer [defroutes GET POST]]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
-
 (defn uuid [& _] (.toString (java.util.UUID/randomUUID)))
 
 (defn parse-date-to-ymd
@@ -134,3 +129,9 @@
 
 (defn post-records-handler [request id]
   (response (filter #(= id (:id %)) testdata2)))
+
+(defn -main
+  "Pulls in files from paths, and exports a view in email-ascending order."
+  [& args]
+  (-> (apply parse-files args)
+      view-by-email-desc))

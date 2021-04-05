@@ -1,36 +1,37 @@
-# homework
+# Record-parsing and view demo
 
-FIXME: description
+This is a demo of record reading and parsing. 
+
+## Requirements
+
+The app is currently uncompiled, and will require Leiningen to run. See https://github.com/technomancy/leiningen
 
 ## Installation
 
-Download from http://example.com/FIXME.
+There is nothing to install. As this is an example for demonstration purposes, most of this is intended to be run from the Clojure REPL. However, a basic view can be created from the command line app. Give the app the path of any files you would like to view, with the full path in quotes.
 
-## Usage
+### Example
+Using Leiningen, the app can be run with the `lein run` command, then the file paths in quote marks, all separated by spaces, like so:
 
-FIXME: explanation
+`lein run "./resources/comma-data.csv" "./resources/space-data.txt" "./resources/pipe-data.txt"`
 
-    $ java -jar homework-0.1.0-standalone.jar [args]
+The app should present the records from those three files sorted in reverse-email order.
 
-## Options
+## File Formats
 
-FIXME: listing of options this app accepts.
+The app should parse data from comma-separated lists, pipe-separated lists, or simple data parsed with spaces.
 
-## Examples
+## Testing
 
-...
+Testing can be shown through Leiningen with `lein test`.
 
-### Bugs
+## Author
 
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+This has been created by Scott W. Starkey. For more information, contact me at yekrats@gmail.com
 
 ## License
 
-Copyright © 2021 FIXME
+Copyright © 2021
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
